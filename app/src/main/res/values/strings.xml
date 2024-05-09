@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">NewsApp</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_splash_activiyt">SplashActiviyt</string>
+    <string name="title_activity_news_home">NewsHome</string>
+    <string name="news_app">News App!</string>
+    <string name="catigory">Catigory</string>
+    <string name="settings">Settings</string>
+    <string name="nesw_image">Nesw Image</string>
+</resources>
