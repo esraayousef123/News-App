@@ -47,11 +47,13 @@ fun SourceTabRow(modifier: Modifier) { // this fun that i will call to show the 
                 override fun onResponse(
                     call: Call<ResponseFromApi>,
                     response: retrofit2.Response<ResponseFromApi> // result from api
+
                 ) {
                     if (response.isSuccessful) {
                         val sources = response.body()?.sources // list of sources returned from api
                         if (sources?.isNotEmpty() == true) {
                             sourceslist.addAll(sources) // list of sources from api
+
                         } else {
 
                             // بيانات فارغة
@@ -59,8 +61,7 @@ fun SourceTabRow(modifier: Modifier) { // this fun that i will call to show the 
                         }
 
 
-                    }
-                    else{
+                    } else {
                         // الاستجابة غير ناجحة
                         Log.e("API Error", "Unsuccessful response: ${response.code()}")
                     }
@@ -75,52 +76,48 @@ fun SourceTabRow(modifier: Modifier) { // this fun that i will call to show the 
             })//enqueue fun is to run this code on the background therad , to check the return data
     }
     if(sourceslist.isNotEmpty()){ // before this line the app was crashing so i have to check firts that the list is not empty before rendering the view
-        ScrollableTabRow(selectedTabIndex = slectedTabInedx.intValue,modifier=modifier,
-            indicator = {},
-            divider = {},
-            edgePadding = 8.dp
+    ScrollableTabRow(
+        selectedTabIndex = slectedTabInedx.intValue, modifier = modifier,
+        indicator = {},
+        divider = {},
+        edgePadding = 8.dp
 
 
+    ) { // composable / view that will be render
+        sourceslist.forEachIndexed { index, sourcesItem ->
+            Tab(
+                selected = index == slectedTabInedx.intValue,
+                onClick = { slectedTabInedx.intValue = index },
+                selectedContentColor = Color.White,
+                unselectedContentColor = Color.Green
+            )
+            {
+                Text(
+                    text = sourcesItem?.name ?: "",
+                    modifier = if (index == slectedTabInedx.intValue)
+                        Modifier // tab is selected
+                            .padding(8.dp)
+                            .background(Color.Green, RoundedCornerShape(50))
+                            .padding(vertical = 8.dp, horizontal = 16.dp)
+                    else
+                        Modifier
+                            .padding(8.dp)
+                            .border(2.dp, Color.Green, CircleShape)
+
+                            .padding(vertical = 8.dp, horizontal = 18.dp)
+                    //try sometq
 
 
-
-            ) { // composable / view that will be render
-            sourceslist.forEachIndexed { index, sourcesItem ->
-                Tab(
-                    selected = index == slectedTabInedx.intValue,
-                    onClick = { slectedTabInedx.intValue = index },
-                    selectedContentColor = Color.White,
-                    unselectedContentColor = Color.Green
                 )
-                {
-                    Text(
-                        text = sourcesItem?.name ?: "",
-                        modifier = if (index == slectedTabInedx.intValue)
-                            Modifier // tab is selected
-                                .padding(8.dp)
-                                .background(Color.Green, RoundedCornerShape(50))
-                                .padding(vertical = 8.dp , horizontal = 16.dp)
-                        else
-                            Modifier
-                                .padding(8.dp)
-                                .border(2.dp ,Color.Green , CircleShape )
-
-                                .padding(vertical = 8.dp , horizontal = 16.dp)
-                        //try sometq
-
-
-
-
-                    )
-                }
-
-
             }
+
+
         }
+    }
 
 
-    }
-    }
+    }}
+
 
 
 
