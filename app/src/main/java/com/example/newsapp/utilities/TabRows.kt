@@ -18,18 +18,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.newsapp.API.RetrofitObject
-import com.example.newsapp.model.API.ResponseFromApi
+import com.example.newsapp.model.API.SourcesResponse
 import com.example.newsapp.model.API.SourcesItem
 import com.example.newsapp.model.Constant
-import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
-import kotlin.math.log
 
 
 @Composable
 // using in the news screen and i get the content of the tabs from API
-fun SourceTabRow(modifier: Modifier) { // this fun that i will call to show the tapRow
+fun SourceTabRow(modifier: Modifier , onTabSelected: (sourceId: String?) -> Unit) { // this fun that i will call to show the tapRow
 
     val slectedTabInedx = remember { // selected tab by defult the tab selected at first
         mutableIntStateOf(0)
@@ -43,10 +41,10 @@ fun SourceTabRow(modifier: Modifier) { // this fun that i will call to show the 
         RetrofitObject
             .apiInterfaceImplementationByRetrofit() // object from the api interface
             .getNewsSources(Constant.apiKey) // to return object from call class
-            .enqueue(object : Callback<ResponseFromApi> {
+            .enqueue(object : Callback<SourcesResponse> {
                 override fun onResponse(
-                    call: Call<ResponseFromApi>,
-                    response: retrofit2.Response<ResponseFromApi> // result from api
+                    call: Call<SourcesResponse>,
+                    response: retrofit2.Response<SourcesResponse> // result from api
 
                 ) {
                     if (response.isSuccessful) {
@@ -69,7 +67,7 @@ fun SourceTabRow(modifier: Modifier) { // this fun that i will call to show the 
                 }
 
 
-                override fun onFailure(call: Call<ResponseFromApi>, t: Throwable) {
+                override fun onFailure(call: Call<SourcesResponse>, t: Throwable) {
                     Log.e("APIError", "Failed to retrieve data: ${t.message}")
                 }
 
@@ -87,7 +85,7 @@ fun SourceTabRow(modifier: Modifier) { // this fun that i will call to show the 
         sourceslist.forEachIndexed { index, sourcesItem ->
             Tab(
                 selected = index == slectedTabInedx.intValue,
-                onClick = { slectedTabInedx.intValue = index },
+                onClick = { slectedTabInedx.intValue = index ; onTabSelected(sourcesItem?.id) },
                 selectedContentColor = Color.White,
                 unselectedContentColor = Color.Green
             )
